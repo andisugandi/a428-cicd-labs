@@ -6,10 +6,12 @@ node {
       )
     ]
   )
-  withEnv(["CI=true"])
   checkout scm
-  withDockerContainer(args: '-v /home/a428-cicd-labs:/usr/src/app, -p 3000:3000', image: 'node:16-buster-slim'){
-    stage('Build'){
-      sh 'npm install'
+  docker.image('node:16-buster-slim').withRun('-v /home/a428-cicd-labs:/usr/src/app', '-p 3000:3000'){
+    withEnv(["CI=true"]){
+      stage('Build'){
+	sh 'npm install'
+      }
+    }
   }
 }
